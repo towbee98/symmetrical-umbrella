@@ -44,6 +44,9 @@ app.get('/api/hello',async (req, res) => {
 })
 
 
+app.get('/',async (req, res) => {
+    res.status(200).json({message:"dfdgd"})
+})
 app.listen(port,()=>{
     console.log('listening on port '+port);
 });
