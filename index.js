@@ -40,7 +40,7 @@ app.get('/api/hello',async (req, res) => {
     //   }
     const weatherData =await getTemp(ip.city)
     // console.log(weatherData)
-    res.status(200).json({"client_ip":ip.query, "location":ip.city, "greeting": `Hello, ${visitor_name}!, the temperature is ${(weatherData.main.temp-32)*0.56} degrees Celcius in ${ip.city}`});
+    res.status(200).json({"client_ip":ip.query, "location":ip.city, "greeting": `Hello, ${visitor_name}!, the temperature is ${Math.round((weatherData.main.temp-32)*0.56)} degrees Celcius in ${ip.city}`});
 })
 
 
