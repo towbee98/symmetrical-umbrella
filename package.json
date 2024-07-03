@@ -2,12 +2,12 @@
   "name": "stage-1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm i && npm run start",
     "start": "node app.js",
-    "dev": "nodemon app.js",
-    "build": "npm install && npm start"
+    "dev": "nodemon app.js"
+    
   },
   "keywords": [],
   "author": "",
