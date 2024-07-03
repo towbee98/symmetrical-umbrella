@@ -1,18 +1,19 @@
 const express= require('express')
 const axios = require('axios');
 const dotenv = require('dotenv');
-dotenv.config()
 const app = express();
+dotenv.config()
 
-const port = process.env.PORT || 3000
-
+const port = process.env.PORT 
+// console.log(`Port: ${port}`)
+// const baseUrl = "http://api.weatherapi.com/v1"
 
 const getTemp =async (city)=>{
     options = {
         method: 'GET',
         url: `https://open-weather13.p.rapidapi.com/city/${city}/EN`,
         headers: {
-          'x-rapidapi-key': process.env.RAPTID_API_KEY,
+          'x-rapidapi-key': process.env.RAPID_API_KEY,
           'x-rapidapi-host': 'open-weather13.p.rapidapi.com'
         }
       };
@@ -27,7 +28,9 @@ const getIp= async()=>{
 }
 
 app.get('/api/hello',async (req, res) => {
-    console.log(req.query.visitor_name)
+    // console.log(req.query.visitor_name)
+    // console.log(req.ip)
+    // console.log(req.headers['x-forwarded-for'])
     const ip =await getIp()
    const visitor_name = req.query.visitor_name || "visitor"
     // {
@@ -36,7 +39,8 @@ app.get('/api/hello',async (req, res) => {
     //     "greeting": "Hello, Mark!, the temperature is 11 degrees Celcius in New York"
     //   }
     const weatherData =await getTemp(ip.city)
-    res.status(200).json({"client_ip":ip.query, "location":ip.city, "greeting": `Hello, ${visitor_name}!, the temperature is ${weatherData.main.temp} degrees Celcius in ${ip.city}`});
+    // console.log(weatherData)
+    res.status(200).json({"client_ip":ip.query, "location":ip.city, "greeting": `Hello, ${visitor_name}!, the temperature is ${(weatherData.main.temp-32)*0.56} degrees Celcius in ${ip.city}`});
 })
 
 
