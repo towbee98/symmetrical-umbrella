@@ -28,16 +28,10 @@ const getIp= async()=>{
 }
 
 app.get('/api/hello',async (req, res) => {
-    // console.log(req.query.visitor_name)
-    // console.log(req.ip)
-    // console.log(req.headers['x-forwarded-for'])
+   
     const ip =await getIp()
    const visitor_name = req.query.visitor_name || "visitor"
-    // {
-    //     "client_ip": "127.0.0.1", // The IP address of the requester
-    //     "location": "New York" // The city of the requester
-    //     "greeting": "Hello, Mark!, the temperature is 11 degrees Celcius in New York"
-    //   }
+   
     const weatherData =await getTemp(ip.city)
     // console.log(weatherData)
     res.status(200).json({"client_ip":ip.query, "location":ip.city, "greeting": `Hello, ${visitor_name}!, the temperature is ${Math.round((weatherData.main.temp-32)*0.56)} degrees Celcius in ${ip.city}`});
