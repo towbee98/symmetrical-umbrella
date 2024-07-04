@@ -1,20 +1,22 @@
 const express= require('express')
 const axios = require('axios');
 const dotenv = require('dotenv');
+
+// const ip=getIpInfoMiddleware
 const app = express();
 dotenv.config()
 
 const port = process.env.PORT 
-// console.log(`Port: ${port}`)
-// const baseUrl = "http://api.weatherapi.com/v1"
 
-const getTemp =async (city)=>{
+
+const getTemp =async (ip)=>{
     options = {
         method: 'GET',
-        url: `https://open-weather13.p.rapidapi.com/city/${city}/EN`,
+        url: `https://weatherapi-com.p.rapidapi.com/current.json`,
+        params: {q: ip==="127.0.0.1"?"auto:ip":ip},
         headers: {
           'x-rapidapi-key': process.env.RAPID_API_KEY,
-          'x-rapidapi-host': 'open-weather13.p.rapidapi.com'
+          'x-rapidapi-host': 'weatherapi-com.p.rapidapi.com'
         }
       };
       const response =await  axios.request(options);    
@@ -22,19 +24,15 @@ const getTemp =async (city)=>{
 }
 
 
-const getIp= async()=>{
-    const response= await axios.get("http://ip-api.com/json")          
-                return response.data
-}
 
 app.get('/api/hello',async (req, res) => {
    
-    const ip =await getIp()
+    const ip =req.ip.split(':')[3]
    const visitor_name = req.query.visitor_name || "visitor"
    
-    const weatherData =await getTemp(ip.city)
-    // console.log(weatherData)
-    res.status(200).json({"client_ip":ip.query, "location":ip.city, "greeting": `Hello, ${visitor_name}!, the temperature is ${Math.round((weatherData.main.temp-32)*0.56)} degrees Celcius in ${ip.city}`});
+    const weatherData =await getTemp(ip)
+     console.log(weatherData)
+    res.status(200).json({"client_ip":ip, "location":weatherData.location.name, "greeting": `Hello, ${visitor_name}!, the temperature is ${Math.round(weatherData.current.temp_c)} degrees Celcius in ${weatherData.location.name}`});
 })
 
 
