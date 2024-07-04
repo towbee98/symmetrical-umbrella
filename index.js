@@ -6,15 +6,15 @@ dotenv.config()
 
 const port = process.env.PORT 
 // console.log(`Port: ${port}`)
- const baseUrl = "http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_"
+// const baseUrl = "http://api.weatherapi.com/v1"
 
-const getTemp =async (ip)=>{
+const getTemp =async (city)=>{
     options = {
         method: 'GET',
-        url: `https://weatherapi-com.p.rapidapi.com/current.json?q=${ip}`,
+        url: `https://open-weather13.p.rapidapi.com/city/${city}/EN`,
         headers: {
           'x-rapidapi-key': process.env.RAPID_API_KEY,
-          'x-rapidapi-host': 'weatherapi-com.p.rapidapi.com'
+          'x-rapidapi-host': 'open-weather13.p.rapidapi.com'
         }
       };
       const response =await  axios.request(options);    
@@ -29,11 +29,8 @@ const getIp= async()=>{
 
 app.get('/api/hello',async (req, res) => {
     // console.log(req.query.visitor_name)
-     console.log(req.ip.split(':')[3])
- console.log(req.headers['x-forwarded-for'])
-
-//  const response= await axios.get(`http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY},q=${req.ip.split(':')[3]}`)          
-//  console.log(response.data)
+    // console.log(req.ip)
+    // console.log(req.headers['x-forwarded-for'])
     const ip =await getIp()
    const visitor_name = req.query.visitor_name || "visitor"
     // {
@@ -41,9 +38,9 @@ app.get('/api/hello',async (req, res) => {
     //     "location": "New York" // The city of the requester
     //     "greeting": "Hello, Mark!, the temperature is 11 degrees Celcius in New York"
     //   }
-    const weatherData =await getTemp(req.ip.split(':')[3])
+    const weatherData =await getTemp(ip.city)
     // console.log(weatherData)
-    res.status(200).json({"client_ip":req.ip.split(':')[3], "location":weatherData.location.name, "greeting": `Hello, ${visitor_name}!, the temperature is ${weatherData.current.temp_c} degrees Celcius in ${weatherData.location.name}`});
+    res.status(200).json({"client_ip":ip.query, "location":ip.city, "greeting": `Hello, ${visitor_name}!, the temperature is ${Math.round((weatherData.main.temp-32)*0.56)} degrees Celcius in ${ip.city}`});
 })
 
 
