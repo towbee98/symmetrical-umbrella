@@ -35,6 +35,7 @@ app.get('/api/hello',async (req, res) => {
    try {
        const ip =req.ip.split(':')[3]
        console.log(ip)
+       console.log(req.ip)
       const visitor_name = req.query.visitor_name || "visitor"
       
        const weatherData =await getTemp(ip)
