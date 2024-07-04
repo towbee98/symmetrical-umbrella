@@ -10,6 +10,7 @@ const port = process.env.PORT
 
 
 const getTemp =async (ip)=>{
+
     options = {
         method: 'GET',
         url: `https://weatherapi-com.p.rapidapi.com/current.json`,
@@ -19,20 +20,29 @@ const getTemp =async (ip)=>{
           'x-rapidapi-host': 'weatherapi-com.p.rapidapi.com'
         }
       };
-      const response =await  axios.request(options);    
-      return response.data;
+      try {
+          const response =await  axios.request(options);    
+          return response.data;
+        
+      } catch (error) {
+        throw error.message
+      }
 }
 
 
 
 app.get('/api/hello',async (req, res) => {
-   
-    const ip =req.ip.split(':')[3]
-   const visitor_name = req.query.visitor_name || "visitor"
-   
-    const weatherData =await getTemp(ip)
-     console.log(weatherData)
-    res.status(200).json({"client_ip":ip, "location":weatherData.location.name, "greeting": `Hello, ${visitor_name}!, the temperature is ${Math.round(weatherData.current.temp_c)} degrees Celcius in ${weatherData.location.name}`});
+   try {
+       const ip =req.ip.split(':')[3]
+       console.log(ip)
+      const visitor_name = req.query.visitor_name || "visitor"
+      
+       const weatherData =await getTemp(ip)
+        console.log(weatherData)
+       res.status(200).json({"client_ip":ip, "location":weatherData.location.name, "greeting": `Hello, ${visitor_name}!, the temperature is ${Math.round(weatherData.current.temp_c)} degrees Celcius in ${weatherData.location.name}`});
+   } catch (error) {
+    res.status(500).json({message:error.message})
+   }
 })
 
 
