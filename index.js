@@ -29,13 +29,18 @@ const getTemp =async (ip)=>{
       }
 }
 
-
+const getIp= async()=>{
+    const response= await axios.get("http://ip-api.com/json")          
+                return response.data
+}
 
 app.get('/api/hello',async (req, res) => {
    try {
-       const ip =req.ip.split(':')[3]
+    //    const ip =req.ip.split(':')[3]
+    const {query:ip} =await getIp()
        console.log(ip)
        console.log(req.ip)
+       console.log(req.headers['x-forwarded-for'])
       const visitor_name = req.query.visitor_name || "visitor"
       
        const weatherData =await getTemp(ip)
