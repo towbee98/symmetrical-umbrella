@@ -37,7 +37,8 @@ const getIp= async()=>{
 app.get('/api/hello',async (req, res) => {
    try {
     //    const ip =req.ip.split(':')[3]
-    const {query:ip} =await getIp()
+  //  const {query:ip} =await getIp()
+  const ip = req.headers['x-forwarded-for'].split(',')[0]
        console.log(ip)
        console.log(req.ip)
        console.log(req.headers['x-forwarded-for'])
